@@ -20,10 +20,21 @@ main(int argc, const char *argv[])
   
   id pool = [[NSAutoreleasePool alloc] init];
   // Your code here...
-  NSString *fileName = [NSString stringWithCString: argv[1]];
+  NSString *fileName = [[NSString stringWithCString: argv[1]] 
+			 stringByAppendingPathComponent: @"project.pbxproj"];
   PBXCoder *coder = [[PBXCoder alloc] initWithContentsOfFile: fileName];
   PBXContainer *container = [coder unarchive];
   
+  // build...
+  if([container build])
+    {
+      NSLog(@"Build Succeeded");
+    }
+  else
+    {
+      NSLog(@"Build Failed");
+    }
+
   // The end...
   [pool release];
 
