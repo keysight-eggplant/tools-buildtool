@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <XCode/PBXCoder.h>
 #import <XCode/PBXContainer.h>
+#import <XCode/NSString+PBXAdditions.h>
 
 int
 main(int argc, const char *argv[])
@@ -22,17 +23,31 @@ main(int argc, const char *argv[])
   // Your code here...
   NSString *fileName = [[NSString stringWithCString: argv[1]] 
 			 stringByAppendingPathComponent: @"project.pbxproj"];
+  NSString *function = [NSString stringWithCString: argv[2]];
   PBXCoder *coder = [[PBXCoder alloc] initWithContentsOfFile: fileName];
   PBXContainer *container = [coder unarchive];
   
-  // build...
-  if([container build])
+  if([function isEqualToString: @""])
     {
-      NSLog(@"Build Succeeded");
+      function = @"build"; // default action...
+    }
+
+  SEL operation = NSSelectorFromString(function);
+  if([container respondsToSelector: operation])
+    {
+      // build...
+      if([container performSelector: operation])
+	{
+	  NSLog(@"%@ Succeeded",[function stringByCapitalizingFirstCharacter]);
+	}
+      else
+	{
+	  NSLog(@"%@ Failed",[function stringByCapitalizingFirstCharacter]);
+	}
     }
   else
     {
-      NSLog(@"Build Failed");
+      NSLog(@"Unknown build operation \"%@\"",function);
     }
 
   // The end...
