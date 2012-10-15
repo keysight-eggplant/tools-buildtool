@@ -11,6 +11,23 @@
 #import <XCode/PBXContainer.h>
 #import <XCode/NSString+PBXAdditions.h>
 
+NSString *
+findProjectFilename(NSArray *projectDirEntries)
+{
+  NSEnumerator *e = [projectDirEntries objectEnumerator];
+  NSString     *fileName;
+
+  while ((fileName = [e nextObject]))
+    {
+      if (   [[fileName pathExtension] isEqual: @"xcode"]
+	  || [[fileName pathExtension] isEqual: @"xcodeproj"]
+	  || [[fileName pathExtension] isEqual: @"pbproj"] )
+	return [fileName stringByAppendingPathComponent: @"project.pbxproj"];
+    }
+
+  return nil;
+}
+
 int
 main(int argc, const char *argv[])
 {
@@ -21,17 +38,44 @@ main(int argc, const char *argv[])
   
   id pool = [[NSAutoreleasePool alloc] init];
   // Your code here...
-  NSString *fileName = [[NSString stringWithCString: argv[1]] 
+  NSString                   *fileName = nil;
+  NSString                   *function = nil; 
+  PBXCoder                   *coder = nil;
+  PBXContainer               *container = nil;
+  NSString                   *projectDir;
+  NSArray                    *projectDirEntries;
+  NSFileManager              *fileManager = [NSFileManager defaultManager];
+
+  projectDir        = [fileManager currentDirectoryPath];
+  projectDirEntries = [fileManager directoryContentsAtPath: projectDir];
+
+  // Get the project...
+  if(argv[1] != NULL)
+    {
+      fileName = [[NSString stringWithCString: argv[1]] 
 			 stringByAppendingPathComponent: @"project.pbxproj"];
-  NSString *function = [NSString stringWithCString: argv[2]];
-  PBXCoder *coder = [[PBXCoder alloc] initWithContentsOfFile: fileName];
-  PBXContainer *container = [coder unarchive];
-  
-  if([function isEqualToString: @""])
+    }
+  else
+    {
+      fileName = findProjectFilename(projectDirEntries);
+    }
+
+  // If there is a project, add the build operation...
+  if(argv[2] != NULL && argc > 1)
+    {
+      function = [NSString stringWithCString: argv[2]];
+    }
+
+  if([function isEqualToString: @""] || function == nil)
     {
       function = @"build"; // default action...
     }
 
+  // Unarchive...
+  coder = [[PBXCoder alloc] initWithContentsOfFile: fileName];
+  container = [coder unarchive];
+
+  // Build...
   SEL operation = NSSelectorFromString(function);
   if([container respondsToSelector: operation])
     {
