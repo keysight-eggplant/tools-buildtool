@@ -56,7 +56,7 @@ main(int argc, const char *argv[])
       fileName = [xcodeFilePath
 			 stringByAppendingPathComponent: 
 		     @"project.pbxproj"];
-      if([[xcodeFilePath pathExtension] isEqualToString:@"xcodebuild"] == NO)
+      if([[xcodeFilePath pathExtension] isEqualToString:@"xcodeproj"] == NO)
 	{
 	  fileName = findProjectFilename(projectDirEntries);
 	  function = [NSString stringWithCString: argv[1]];
