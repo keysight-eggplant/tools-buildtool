@@ -19,10 +19,10 @@ findProjectFilename(NSArray *projectDirEntries)
 
   while ((fileName = [e nextObject]))
     {
-      if (   [[fileName pathExtension] isEqual: @"xcode"]
-	  || [[fileName pathExtension] isEqual: @"xcodeproj"]
-	  || [[fileName pathExtension] isEqual: @"pbproj"] )
-	return [fileName stringByAppendingPathComponent: @"project.pbxproj"];
+      if ([[fileName pathExtension] isEqual: @"xcodeproj"])
+	{
+	  return [fileName stringByAppendingPathComponent: @"project.pbxproj"];
+	}
     }
 
   return nil;
@@ -52,18 +52,28 @@ main(int argc, const char *argv[])
   // Get the project...
   if(argv[1] != NULL)
     {
-      fileName = [[NSString stringWithCString: argv[1]] 
-			 stringByAppendingPathComponent: @"project.pbxproj"];
+      NSString *xcodeFilePath = [NSString stringWithCString: argv[1]];
+      fileName = [xcodeFilePath
+			 stringByAppendingPathComponent: 
+		     @"project.pbxproj"];
+      if([[xcodeFilePath pathExtension] isEqualToString:@"xcodebuild"] == NO)
+	{
+	  fileName = findProjectFilename(projectDirEntries);
+	  function = [NSString stringWithCString: argv[1]];
+	}
+      else
+	{
+	  // If there is a project, add the build operation...
+	  if(argv[2] != NULL && argc > 1)
+	    {
+	      function = [NSString stringWithCString: argv[2]];
+	    }
+	}
+
     }
   else
     {
       fileName = findProjectFilename(projectDirEntries);
-    }
-
-  // If there is a project, add the build operation...
-  if(argv[2] != NULL && argc > 1)
-    {
-      function = [NSString stringWithCString: argv[2]];
     }
 
   if([function isEqualToString: @""] || function == nil)
