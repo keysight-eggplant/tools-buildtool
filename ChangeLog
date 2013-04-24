@@ -1,3 +1,7 @@
+2013-04-24 13:42-EDT Gregory John Casamento <greg.casamento@gmail.com>
+
+	* main.m: Fix error detecting the xcodeproj file.
+
 2013-04-24 02:38-EDT Gregory John Casamento <greg.casamento@gmail.com>
 
 	* main.m: Handle command if it is either the first or second
