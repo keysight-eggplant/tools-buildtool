@@ -19,7 +19,8 @@ findProjectFilename(NSArray *projectDirEntries)
 
   while ((fileName = [e nextObject]))
     {
-      if ([[fileName pathExtension] isEqual: @"xcodeproj"])
+      NSRange range = [fileName rangeOfString:@"._"];
+      if ([[fileName pathExtension] isEqual: @"xcodeproj"] && range.location == NSNotFound)
 	{
 	  return [fileName stringByAppendingPathComponent: @"project.pbxproj"];
 	}
