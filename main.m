@@ -36,7 +36,8 @@ main(int argc, const char *argv[])
     {
       return 0;
     }
-  
+
+  setlocale(LC_ALL, "en_US.utf8");
   id pool = [[NSAutoreleasePool alloc] init];
   // Your code here...
   NSString                   *fileName = nil;
@@ -82,6 +83,8 @@ main(int argc, const char *argv[])
       function = @"build"; // default action...
     }
 
+  NSString *display = [function stringByCapitalizingFirstCharacter];
+
   // Unarchive...
   coder = [[PBXCoder alloc] initWithContentsOfFile: fileName];
   container = [coder unarchive];
@@ -90,19 +93,21 @@ main(int argc, const char *argv[])
   SEL operation = NSSelectorFromString(function);
   if([container respondsToSelector: operation])
     {
+
       // build...
+      puts([[NSString stringWithFormat: @"Start operation %@", display] cString]); 
       if([container performSelector: operation])
 	{
-	  NSLog(@"%@ Succeeded",[function stringByCapitalizingFirstCharacter]);
+	  puts([[NSString stringWithFormat: @"%@ Succeeded", display] cString]);
 	}
       else
 	{
-	  NSLog(@"%@ Failed",[function stringByCapitalizingFirstCharacter]);
+          puts([[NSString stringWithFormat: @"%@ Failed", display] cString]);
 	}
     }
   else
     {
-      NSLog(@"Unknown build operation \"%@\"",function);
+      puts([[NSString stringWithFormat: @"Unknown build operation \"%@",display] cString]);
     }
 
   // The end...
