@@ -39,7 +39,6 @@ main(int argc, const char *argv[])
 
   setlocale(LC_ALL, "en_US.utf8");
   id pool = [[NSAutoreleasePool alloc] init];
-  // Your code here...
   NSString                   *fileName = nil;
   NSString                   *function = nil; 
   PBXCoder                   *coder = nil;
@@ -91,18 +90,18 @@ main(int argc, const char *argv[])
 
   // Build...
   SEL operation = NSSelectorFromString(function);
-  if([container respondsToSelector: operation])
+  if ([container respondsToSelector: operation])
     {
 
       // build...
-      puts([[NSString stringWithFormat: @"Start operation %@", display] cString]); 
-      if([container performSelector: operation])
+      puts([[NSString stringWithFormat: @"\033[1;32m**\033[0m Start operation %@", display] cString]); 
+      if ([container performSelector: operation])
 	{
-	  puts([[NSString stringWithFormat: @"%@ Succeeded", display] cString]);
+	  puts([[NSString stringWithFormat: @"\033[1;32m**\033[0m %@ Succeeded", display] cString]);
 	}
       else
 	{
-          puts([[NSString stringWithFormat: @"%@ Failed", display] cString]);
+          puts([[NSString stringWithFormat: @"\033[1;31m**\033[0m %@ Failed", display] cString]);
 	}
     }
   else
