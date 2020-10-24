@@ -89,6 +89,7 @@ main(int argc, const char *argv[])
   container = [coder unarchive];
 
   // Build...
+  int returnCode = 1;
   SEL operation = NSSelectorFromString(function);
   if ([container respondsToSelector: operation])
     {
@@ -98,6 +99,7 @@ main(int argc, const char *argv[])
       if ([container performSelector: operation])
 	{
 	  puts([[NSString stringWithFormat: @"\033[1;32m**\033[0m %@ Succeeded", display] cString]);
+          returnCode = 0;
 	}
       else
 	{
@@ -112,6 +114,6 @@ main(int argc, const char *argv[])
   // The end...
   [pool release];
 
-  return 0;
+  return returnCode;
 }
 
