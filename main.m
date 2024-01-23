@@ -1,3 +1,8 @@
+// ========== Keysight Technologies Added Changes To Satisfy LGPL 2.x Section 2(a) Requirements ========== 
+// Committed by: Adam Fox 
+// Commit ID: 89414f8d6fc0cc116eb50bdb3f563e6f00d9d950 
+// Date: 2020-10-24 16:49:15 -0600 
+// ========== End of Keysight Technologies Notice ========== 
 /*
    Project: buildtool
 
